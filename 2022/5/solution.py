@@ -2,6 +2,7 @@
 import re
 from collections import defaultdict
 
+is_part_1 = False
 stacks = defaultdict(list)
 with open('input.txt') as f:
     is_init = True
@@ -19,7 +20,11 @@ with open('input.txt') as f:
             match = re.match('move (\d+) from (\d+) to (\d+)', l.strip())
             if match:
                 to_move, start, end = [int(x) for x in match.groups()]
-                crates = [stacks[start].pop() for x in range(to_move)]
+                if is_part_1:
+                    crates = [stacks[start].pop() for x in range(to_move)]
+                else:
+                    crates = stacks[start][-1 * to_move:]
+                    del stacks[start][-1 * to_move:]
                 stacks[end] += crates
 
 print(''.join([stacks[i][-1] if stacks[i] else ' ' for i in range(1, max(stacks.keys()) + 1)]))
